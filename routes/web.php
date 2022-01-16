@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Book;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,4 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome', ['title' => 'Welcome to the Store'])->name('welcome');
+Route::get('/', function () {
+    $books = Book::with(['author', 'category', 'publisher'])->get();
+    return view('welcome', ['title' => 'Welcome to the Store', 'books' => $books]);
+})->name('welcome');
+
+Route::get('/book/{book}', function (Book $book) {
+    return view('book', ['book' => $book]);
+})->name('book.details');
