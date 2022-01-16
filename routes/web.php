@@ -1,9 +1,11 @@
 <?php
 
+use App\Cart\Cart;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,3 +39,23 @@ Route::get('/category/{category}', function (Category $category) {
 Route::get('/publisher/{publisher}', function (Publisher $publisher) {
     return view('publisher', ['publisher' => $publisher]);
 })->name('publisher.details');
+
+Route::post('/cart', function (Request $request, Cart $cart) {
+    $book = Book::find($request->post('book_id'));
+    $cart->add($book, 1)->save();
+
+    return redirect(route('cart.details'));
+})->name('cart.add');
+
+Route::put('/cart', function (Request $request, Cart $cart) {
+    foreach ($request->post('items') as $key => $item) {
+        $cart->update($key, $item['qty']);
+    }
+
+    $cart->save();
+    return redirect(route('cart.details'));
+})->name('cart.update');
+
+Route::get('/cart', function (Cart $cart) {
+    return view('cart', ['cart' => $cart]);
+})->name('cart.details');

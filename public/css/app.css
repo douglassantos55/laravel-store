@@ -515,6 +515,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mt-6 {
   margin-top: 1.5rem;
 }
+.mt-10 {
+  margin-top: 2.5rem;
+}
 .block {
   display: block;
 }
@@ -523,6 +526,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .flex {
   display: flex;
+}
+.table {
+  display: table;
 }
 .grid {
   display: grid;
@@ -556,6 +562,15 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .w-auto {
   width: auto;
+}
+.w-6 {
+  width: 1.5rem;
+}
+.w-32 {
+  width: 8rem;
+}
+.w-16 {
+  width: 4rem;
 }
 .max-w-xl {
   max-width: 36rem;
@@ -643,6 +658,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pt-8 {
   padding-top: 2rem;
 }
+.text-left {
+  text-align: left;
+}
 .text-center {
   text-align: center;
 }
@@ -665,6 +683,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 .font-bold {
   font-weight: 700;

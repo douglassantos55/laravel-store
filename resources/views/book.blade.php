@@ -18,8 +18,14 @@
 
     <div class="flex items-center gap-4 mt-4">
         <p class="text-red-700 text-2xl font-bold">{{ $book->price }}</p>
-        <x-button primary>{{ __('cart.add') }}</x-button>
-        <x-button secondary>{{ __('wishlist.add') }}</x-button>
+
+        <form method="POST" action="{{ route('cart.add') }}">
+            @csrf
+
+            <input type="hidden" name="book_id" value="{{ $book->id }}" />
+            <x-button primary type="submit">{{ __('cart.add') }}</x-button>
+            <x-button secondary>{{ __('wishlist.add') }}</x-button>
+        </form>
     </div>
 
     <ul class="mt-12">
