@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Author;
 use App\Models\Book;
+use App\Models\Category;
+use App\Models\Publisher;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +25,15 @@ Route::get('/', function () {
 Route::get('/book/{book}', function (Book $book) {
     return view('book', ['book' => $book]);
 })->name('book.details');
+
+Route::get('/author/{author}', function (Author $author) {
+    return view('author', ['author' => $author]);
+})->name('author.details');
+
+Route::get('/category/{category}', function (Category $category) {
+    return view('category', ['category' => $category]);
+})->name('category.details');
+
+Route::get('/publisher/{publisher}', function (Publisher $publisher) {
+    return view('publisher', ['publisher' => $publisher]);
+})->name('publisher.details');

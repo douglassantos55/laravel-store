@@ -9,13 +9,13 @@
 
         <p>
             <span class="text-sm">by</span>
-            <a href="#" class="font-medium text-red-700 hover:underline">{{ $book->author->name }}</a>
+            <a href="{{ route('author.details', ['author' => $book->author->id]) }}" class="font-medium text-red-700 hover:underline">{{ $book->author->name }}</a>
         </p>
 
         <p class="text-gray-500 text-sm">
-            <a href="#" class="hover:underline">{{ $book->category->name }}</a>
+            <a href="{{ route('category.details', ['category' => $book->category->id]) }}" class="hover:underline">{{ $book->category->name }}</a>
             &bullet;
-            <a href="#" class="hover:underline">{{ $book->publisher->name }}</a>
+            <a href="{{ route('publisher.details', ['publisher' => $book->publisher->id]) }}" class="hover:underline">{{ $book->publisher->name }}</a>
         </p>
 
         <span class="block text-red-700 font-bold mt-2">{{ $book->price }}</span>
