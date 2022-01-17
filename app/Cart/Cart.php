@@ -18,6 +18,11 @@ class Cart
      */
     public $items;
 
+    /**
+     * @var Voucher
+     */
+    public $voucher;
+
     public function __construct(Session $session)
     {
         $this->session = $session;
@@ -26,13 +31,14 @@ class Cart
 
     public function load()
     {
-        $items = $this->session->get('cart', []);
-        $this->items = collect($items);
+        $this->items = collect($this->session->get('cart.items', []));
+        $this->voucher = $this->session->get('cart.voucher', null);
     }
 
     public function save()
     {
-        $this->session->put('cart', $this->items->all());
+        $this->session->put('cart.items', $this->items->all());
+        $this->session->put('cart.voucher', $this->voucher);
         $this->session->save();
     }
 
@@ -78,10 +84,24 @@ class Cart
         return $this->items->count();
     }
 
-    public function getTotal(): float
+    public function getSubtotal(): float
     {
         return $this->items->sum(function ($item) {
             return $item->getSubtotal();
         });
+    }
+
+    public function getTotal(): float
+    {
+        return $this->getSubtotal() - $this->getDiscount();
+    }
+
+    private function getDiscount(): float
+    {
+        if (is_null($this->voucher)) {
+            return 0.0;
+        }
+
+        return $this->voucher->getDiscount();
     }
 }

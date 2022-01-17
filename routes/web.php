@@ -42,3 +42,4 @@ Route::get('/publisher/{publisher}', function (Publisher $publisher) {
 Route::post('/cart', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'details'])->name('cart.details');
 Route::put('/cart', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/voucher', [CartController::class, 'voucher'])->name('cart.voucher');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cart\Cart;
+use App\Cart\Voucher;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,8 @@ class CartController extends Controller
         });
     }
 
-    public function details() {
+    public function details()
+    {
         return view('cart', ['cart' => $this->cart]);
     }
 
@@ -48,5 +50,20 @@ class CartController extends Controller
         $this->cart->save();
 
         return redirect(route('cart.details'));
+    }
+
+    public function voucher(Request $request)
+    {
+        $voucher = $request->post('voucher');
+
+        if (empty($voucher) || !in_array($voucher, ['bova11', 'ivvb11'])) {
+            $request->session()->flash('cart_flash', 'Voucher is invalid');
+            return back();
+        }
+
+        $this->cart->voucher = new Voucher($voucher);
+        $this->cart->save();
+
+        return back();
     }
 }

@@ -38,6 +38,16 @@
                     </td>
                 </tr>
                 @endforeach
+                <tr>
+                    <td colspan="3" class="text-right font-bold">{{ __('cart.subtotal') }}</td>
+                    <td class="text-right font-bold">{{ $cart->getSubtotal() }}</td>
+                </tr>
+                @if ($cart->voucher)
+                    <tr>
+                        <td colspan="3" class="text-right font-bold">{{ __('cart.voucher') }} <span class="text-blue-600">{{ $cart->voucher->ticker }}</span></td>
+                        <td class="text-right font-bold">-{{ $cart->voucher->getDiscount() }}</td>
+                    </tr>
+                @endif
                 <tr class="text-lg">
                     <td colspan="3" class="text-right font-bold">Total</td>
                     <td class="text-right font-bold">{{ $cart->getTotal() }}</td>
@@ -50,10 +60,13 @@
 
     <h2 class="font-semibold text-xl">{{ __('cart.voucher') }}</h2>
 
-    <div class="flex items-center mt-4 gap-2">
-        <input class="border p-2" placeholder="{{ __('cart.voucher') }}" />
-        <x-button secondary>{{ __('cart.apply_voucher') }}</x-button>
-    </div>
+    <form action="{{ route('cart.voucher') }}" method="POST">
+        @csrf
+        <div class="flex items-center mt-4 gap-2">
+            <input class="border p-2" placeholder="{{ __('cart.voucher') }}" name="voucher" />
+            <x-button secondary type="submit">{{ __('cart.apply_voucher') }}</x-button>
+        </div>
+    </form>
     @else
     <p class="mt-8">{{ __('cart.empty') }}</p>
     @endif
