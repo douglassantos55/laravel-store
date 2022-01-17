@@ -11,7 +11,15 @@
 </head>
 
 <body class="antialiased">
-    @yield('content')
+    <header class="flex p-4 shadow-md justify-end items-center">
+        <x-mini-cart />
+    </header>
+
+    <main class="py-10">
+        @yield('content')
+    </main>
+
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

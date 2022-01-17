@@ -42,7 +42,6 @@ class Cart {
             $item->incrementQty($qty);
         } else {
             $this->items->push(new CartItem($book, $qty));
-
         }
 
         return $this;
@@ -58,7 +57,17 @@ class Cart {
         return $this;
     }
 
+    public function remove(string $key): CartItem {
+        return $this->items->pull($key);
+    }
+
     public function count(): int {
         return $this->items->count();
+    }
+
+    public function getTotal(): float {
+        return $this->items->sum(function ($item) {
+            return $item->getSubtotal();
+        });
     }
 }

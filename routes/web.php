@@ -44,12 +44,20 @@ Route::post('/cart', function (Request $request, Cart $cart) {
     $book = Book::find($request->post('book_id'));
     $cart->add($book, 1)->save();
 
+    session()->flash('cart_flash', 'Item added to cart');
     return redirect(route('cart.details'));
 })->name('cart.add');
 
 Route::put('/cart', function (Request $request, Cart $cart) {
-    foreach ($request->post('items') as $key => $item) {
-        $cart->update($key, $item['qty']);
+    if ($request->has('REMOVE')) {
+        $removed = $cart->remove($request->post('REMOVE'));
+        session()->flash('cart_flash', "Item \"{$removed->getProduct()}\" removed");
+    } else if ($request->has('items')) {
+        foreach ($request->post('items') as $key => $item) {
+            $cart->update($key, $item['qty']);
+        }
+
+        session()->flash('cart_flash', 'Items updated');
     }
 
     $cart->save();
