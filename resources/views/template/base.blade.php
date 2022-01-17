@@ -11,10 +11,11 @@
 </head>
 
 <body class="antialiased">
-    <header class="flex p-4 shadow-md justify-between items-center">
-        <a href="{{ route('welcome') }}" class="text-xl font-semibold">Book store</a>
-
-        <x-mini-cart />
+    <header class="p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ route('welcome') }}" class="text-xl font-semibold">Book store</a>
+            <x-mini-cart />
+        </div>
     </header>
 
     <main class="py-10">

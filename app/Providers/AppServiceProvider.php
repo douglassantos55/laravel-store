@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Cart\Cart;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,8 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(Cart::class, function ($app) {
-            return new Cart($app->make('session.store'));
+        $this->app->singleton(Cart::class, function (Application $app) {
+            return new Cart($app->get('session.store'));
         });
     }
 

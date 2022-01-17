@@ -1,11 +1,10 @@
 <?php
 
-use App\Cart\Cart;
+use App\Http\Controllers\CartController;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,33 +39,6 @@ Route::get('/publisher/{publisher}', function (Publisher $publisher) {
     return view('publisher', ['publisher' => $publisher]);
 })->name('publisher.details');
 
-Route::post('/cart', function (Request $request, Cart $cart) {
-    $book = Book::find($request->post('book_id'));
-    $cart->add($book, 1)->save();
-
-    session()->flash('cart_flash', 'Item added to cart');
-    return redirect(route('cart.details'));
-})->name('cart.add');
-
-Route::put('/cart', function (Request $request, Cart $cart) {
-    if ($request->has('REMOVE')) {
-        $removed = $cart->remove($request->post('REMOVE'));
-
-        if (!is_null($removed)) {
-            session()->flash('cart_flash', "Item \"{$removed->getProduct()}\" removed");
-        }
-    } else if ($request->has('items')) {
-        foreach ($request->post('items') as $key => $item) {
-            $cart->update($key, $item['qty']);
-        }
-
-        session()->flash('cart_flash', 'Items updated');
-    }
-
-    $cart->save();
-    return redirect(route('cart.details'));
-})->name('cart.update');
-
-Route::get('/cart', function (Cart $cart) {
-    return view('cart', ['cart' => $cart]);
-})->name('cart.details');
+Route::post('/cart', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart', [CartController::class, 'details'])->name('cart.details');
+Route::put('/cart', [CartController::class, 'update'])->name('cart.update');
