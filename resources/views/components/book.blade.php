@@ -20,7 +20,12 @@
 
         <span class="block text-red-700 font-bold mt-2">{{ $book->price }}</span>
 
-        <x-button primary>{{ __('cart.add') }}</x-button>
-        <x-button href="{{ route('welcome') }}" secondary>{{ __('wishlist.add') }}</x-button>
+        <form method="POST" action="{{ route('cart.add') }}">
+            @csrf
+
+            <input type="hidden" name="book_id" value="{{ $book->id }}" />
+            <x-button primary type="submit">{{ __('cart.add') }}</x-button>
+            <x-button secondary>{{ __('wishlist.add') }}</x-button>
+        </form>
     </div>
 </div>

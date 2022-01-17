@@ -5,12 +5,11 @@
 @section('content')
 <div class="container mx-auto">
     <h1 class="text-4xl font-bold">{{ $book->title }}</h1>
+
     <p class="mt-2">
         <span class="text-sm">by</span>
         <a href="{{ route('author.details', ['author' => $book->author->id]) }}" class="font-medium text-red-700 hover:underline">{{ $book->author->name }}</a>
-
         &bullet;
-
         <a href="{{ route('category.details', ['category' => $book->category->id]) }}" class="hover:underline">{{ $book->category->name }}</a>
     </p>
 

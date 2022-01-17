@@ -11,7 +11,9 @@
 </head>
 
 <body class="antialiased">
-    <header class="flex p-4 shadow-md justify-end items-center">
+    <header class="flex p-4 shadow-md justify-between items-center">
+        <a href="{{ route('welcome') }}" class="text-xl font-semibold">Book store</a>
+
         <x-mini-cart />
     </header>
 

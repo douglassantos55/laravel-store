@@ -51,7 +51,10 @@ Route::post('/cart', function (Request $request, Cart $cart) {
 Route::put('/cart', function (Request $request, Cart $cart) {
     if ($request->has('REMOVE')) {
         $removed = $cart->remove($request->post('REMOVE'));
-        session()->flash('cart_flash', "Item \"{$removed->getProduct()}\" removed");
+
+        if (!is_null($removed)) {
+            session()->flash('cart_flash', "Item \"{$removed->getProduct()}\" removed");
+        }
     } else if ($request->has('items')) {
         foreach ($request->post('items') as $key => $item) {
             $cart->update($key, $item['qty']);

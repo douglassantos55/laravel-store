@@ -57,8 +57,12 @@ class Cart {
         return $this;
     }
 
-    public function remove(string $key): CartItem {
-        return $this->items->pull($key);
+    public function remove(string $key): CartItem | null {
+        if ($this->items->has($key)) {
+            return $this->items->pull($key);
+        }
+
+        return null;
     }
 
     public function count(): int {
