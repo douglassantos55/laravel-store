@@ -96,12 +96,12 @@ class Cart
         return $this->getSubtotal() - $this->getDiscount();
     }
 
-    private function getDiscount(): float
+    public function getDiscount(): float
     {
         if (is_null($this->voucher)) {
             return 0.0;
         }
 
-        return $this->voucher->getDiscount();
+        return $this->voucher->getDiscount($this->getSubtotal());
     }
 }

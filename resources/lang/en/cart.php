@@ -19,4 +19,5 @@ return [
     'total' => 'Total',
     'remove' => 'Remove',
     'empty' => 'Your shopping cart is empty.',
+    'checkout' => 'Go to Checkout',
 ];

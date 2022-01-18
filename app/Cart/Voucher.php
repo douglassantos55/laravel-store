@@ -2,7 +2,7 @@
 
 namespace App\Cart;
 
-class Voucher
+abstract class Voucher
 {
     /**
      * @var string
@@ -14,8 +14,5 @@ class Voucher
         $this->ticker = $ticker;
     }
 
-    public function getDiscount(): float
-    {
-        return $this->ticker == 'bova11' ? 10.0 : 20.0;
-    }
+    public abstract function getDiscount(float $value): float;
 }

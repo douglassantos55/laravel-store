@@ -43,10 +43,10 @@
                     <td class="text-right font-bold">{{ $cart->getSubtotal() }}</td>
                 </tr>
                 @if ($cart->voucher)
-                    <tr>
-                        <td colspan="3" class="text-right font-bold">{{ __('cart.voucher') }} <span class="text-blue-600">{{ $cart->voucher->ticker }}</span></td>
-                        <td class="text-right font-bold">-{{ $cart->voucher->getDiscount() }}</td>
-                    </tr>
+                <tr>
+                    <td colspan="3" class="text-right font-bold">{{ __('cart.voucher') }} <span class="text-blue-600">{{ $cart->voucher->ticker }}</span></td>
+                    <td class="text-right font-bold">-{{ $cart->getDiscount() }}</td>
+                </tr>
                 @endif
                 <tr class="text-lg">
                     <td colspan="3" class="text-right font-bold">Total</td>
@@ -55,10 +55,12 @@
             </tbody>
         </table>
 
-        <x-button primary type="submit">{{ __('cart.update') }}</x-button>
+        <x-button secondary type="submit">{{ __('cart.update') }}</x-button>
+
+        <x-button primary href="{{ route('checkout') }}">{{ __('cart.checkout') }}</x-button>
     </form>
 
-    <h2 class="font-semibold text-xl">{{ __('cart.voucher') }}</h2>
+    <h2 class="font-semibold text-xl mt-5">{{ __('cart.voucher') }}</h2>
 
     <form action="{{ route('cart.voucher') }}" method="POST">
         @csrf

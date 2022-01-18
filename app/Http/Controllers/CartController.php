@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cart\Cart;
-use App\Cart\Voucher;
+use App\Cart\VoucherFactory;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
@@ -61,9 +61,13 @@ class CartController extends Controller
             return back();
         }
 
-        $this->cart->voucher = new Voucher($voucher);
-        $this->cart->save();
+        if ($voucher === 'bova11') {
+            $this->cart->voucher = VoucherFactory::create($voucher, 'fixed');
+        } else {
+            $this->cart->voucher = VoucherFactory::create($voucher, 'percent');
+        }
 
+        $this->cart->save();
         return back();
     }
 }
