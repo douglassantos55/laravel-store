@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Checkout\PaymentMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Ramsey\Uuid\Uuid;
 
 class Order extends Model
 {
@@ -15,11 +15,14 @@ class Order extends Model
     const STATUS_CANCELED = 'canceled';
     const STATUS_REFUNDED = 'refunded';
 
-    public function __construct(User $customer, string $deliveryMethod, PaymentMethod $paymentMethod)
+    protected $keyType = 'uuid';
+
+    public $incrementing = false;
+
+    public function __construct(array $attributes = [])
     {
-        $this->delivery_method = $deliveryMethod;
-        $this->paymentMethod = $paymentMethod;
-        $this->customer = $customer;
+        parent::__construct($attributes);
+        $this->id = Uuid::uuid4();
     }
 
     public function customer()

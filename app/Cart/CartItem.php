@@ -8,12 +8,12 @@ class CartItem {
     /**
      * @var int
      */
-    private $qty;
+    public $qty;
 
     /**
      * @var Book
      */
-    private $book;
+    public $book;
 
     public function __construct(Book $book, int $qty) {
         $this->qty = $qty;

@@ -16,20 +16,24 @@ class Book extends Model
 
     public $incrementing = false;
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
         $this->id = Uuid::uuid4();
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo(Author::class);
     }
 
-    public function publisher() {
+    public function publisher()
+    {
         return $this->belongsTo(Publisher::class);
     }
 
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 }

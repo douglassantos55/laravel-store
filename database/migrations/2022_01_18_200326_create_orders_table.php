@@ -32,7 +32,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('delivery_cost')->nullable();
 
             $table->foreignId('customer_id')->references('id')->on('users');
-            $table->foreignUuid('voucher_id')->references('id')->on('vouchers');
+            $table->foreignUuid('voucher_id')->nullable()->references('id')->on('vouchers');
 
             $table->timestamps();
         });

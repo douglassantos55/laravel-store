@@ -23,12 +23,17 @@
 
                 @foreach ($methods as $paymentMethod)
                 <div>
-                    <input id="checkout-method-{{ $paymentMethod->getName() }}" type="radio" name="payment_method" value="{{ $paymentMethod->getName() }}" />
+                    <input id="checkout-method-{{ $paymentMethod->getName() }}" type="radio" name="payment_method" value="{{ $paymentMethod->getName() }}" {{ old('payment_method') == $paymentMethod->getName() ? "checked" : "" }} />
                     <label for="checkout-method-{{ $paymentMethod->getName() }}">{{ $paymentMethod->getName() }}</label>
                 </div>
 
                 @include($paymentMethod->getTemplate())
                 @endforeach
+
+                @error('payment_method')
+                    <div class="mt-1 text-red-600">{{ $message }}</div>
+                @enderror
+
 
                 <div class="block mt-4">
                     <x-button primary type="submit" class="w-full">{{ __('checkout.finish') }}</x-button>

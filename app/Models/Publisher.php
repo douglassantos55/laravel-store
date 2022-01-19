@@ -16,12 +16,14 @@ class Publisher extends Model
 
     public $incrementing = false;
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
         $this->id = Uuid::uuid4();
     }
 
-    public function books() {
+    public function books()
+    {
         return $this->hasMany(Book::class);
     }
 }

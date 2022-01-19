@@ -13,8 +13,13 @@ class Voucher extends Model
     const TYPE_FIXED = 'fixed';
     const TYPE_PERCENT = 'percent';
 
-    public function __construct()
+    protected $keyType = 'uuid';
+
+    public $incrementing = false;
+
+    public function __construct(array $attributes = [])
     {
+        parent::__construct($attributes);
         $this->id = Uuid::uuid4();
     }
 
