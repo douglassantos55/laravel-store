@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Models\Voucher;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +46,5 @@ Route::get('/cart', [CartController::class, 'details'])->name('cart.details');
 Route::put('/cart', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/voucher', [CartController::class, 'voucher'])->name('cart.voucher');
 
-Route::get('/checkout', function () {
-    return view('checkout');
-})->name('checkout');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');

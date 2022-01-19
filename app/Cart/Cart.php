@@ -3,6 +3,7 @@
 namespace App\Cart;
 
 use App\Models\Book;
+use App\Models\Voucher;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Session\Session;
 

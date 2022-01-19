@@ -44,7 +44,7 @@
                 </tr>
                 @if ($cart->voucher)
                 <tr>
-                    <td colspan="3" class="text-right font-bold">{{ __('cart.voucher') }} <span class="text-blue-600">{{ $cart->voucher->ticker }}</span></td>
+                    <td colspan="3" class="text-right font-bold">{{ __('cart.voucher') }} <span class="text-blue-600">{{ $cart->voucher->code }}</span></td>
                     <td class="text-right font-bold">-{{ $cart->getDiscount() }}</td>
                 </tr>
                 @endif

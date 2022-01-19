@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Cart\Cart;
-use App\Cart\VoucherFactory;
 use App\Models\Book;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -54,20 +54,20 @@ class CartController extends Controller
 
     public function voucher(Request $request)
     {
-        $voucher = $request->post('voucher');
+        $code = $request->post('voucher');
+        $voucher = Voucher::where('code', $code)->first();
 
-        if (empty($voucher) || !in_array($voucher, ['bova11', 'ivvb11'])) {
-            $request->session()->flash('cart_flash', 'Voucher is invalid');
+        if (empty($voucher)) {
+            $this->cart->voucher = null;
+            $this->cart->save();
+            $request->session()->flash('cart_flash', 'Voucher not found');
+
             return back();
         }
 
-        if ($voucher === 'bova11') {
-            $this->cart->voucher = VoucherFactory::create($voucher, 'fixed');
-        } else {
-            $this->cart->voucher = VoucherFactory::create($voucher, 'percent');
-        }
-
+        $this->cart->voucher = $voucher;
         $this->cart->save();
+
         return back();
     }
 }

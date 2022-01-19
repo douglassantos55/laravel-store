@@ -18,6 +18,8 @@ return [
     'title' => 'Shopping Cart',
     'total' => 'Total',
     'remove' => 'Remove',
+    'voucher' => 'Voucher',
+    'apply_voucher' => 'Apply Voucher',
     'empty' => 'Your shopping cart is empty.',
     'checkout' => 'Go to Checkout',
 ];

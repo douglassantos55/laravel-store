@@ -2,18 +2,17 @@
 
 namespace App\Cart;
 
+use App\Models\Voucher;
+
 abstract class VoucherFactory
 {
-    const FIXED = 'fixed';
-    const PERCENT = 'percent';
-
     public static function create(string $ticker, string $type): Voucher
     {
         switch ($type) {
-            case self::FIXED:
+            case Voucher::TYPE_FIXED:
                 return new FixedVoucher($ticker);
                 break;
-            case self::PERCENT:
+            case Voucher::TYPE_PERCENT:
                 return new PercentVoucher($ticker);
                 break;
         }
