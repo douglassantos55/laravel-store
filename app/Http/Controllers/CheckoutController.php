@@ -7,7 +7,6 @@ use App\Checkout\PaymentMethod;
 use App\Events\OrderPlaced;
 use App\Models\Order;
 use App\Models\User;
-use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +36,7 @@ class CheckoutController extends Controller
 
     public function index()
     {
-        if ($this->cart->items->isEmpty()) {
+        if ($this->cart->isEmpty()) {
             return redirect(route('cart.details'));
         }
 
@@ -51,7 +50,7 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-        if ($this->cart->items->isEmpty()) {
+        if ($this->cart->isEmpty()) {
             return redirect(route('cart.details'));
         }
 
@@ -93,7 +92,7 @@ class CheckoutController extends Controller
 
             $order->push();
 
-            foreach ($this->cart->items->all() as $cartItem) {
+            foreach ($this->cart->getItems() as $cartItem) {
                 $order->items()->create([
                     'qty' => $cartItem->qty,
                     'book_id' => $cartItem->getId(),
@@ -111,7 +110,7 @@ class CheckoutController extends Controller
             $paymentMethod->process($order);
 
             $order->push();
-            $this->cart->empty();
+            $this->cart->clear();
 
             OrderPlaced::dispatch($order);
         });

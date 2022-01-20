@@ -25,7 +25,7 @@
             </thead>
 
             <tbody>
-                @foreach ($cart->items->all() as $item)
+                @foreach ($cart->getItems() as $item)
                 <tr>
                     <td>
                         <input class="border py-1 px-2 w-16" type="number" min="1" value="{{ $item->getQty() }}" name="items[{{ $item->getId() }}][qty]" />

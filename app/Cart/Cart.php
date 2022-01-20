@@ -86,7 +86,17 @@ class Cart
         return $this->items->count();
     }
 
-    public function empty()
+    public function isEmpty(): bool
+    {
+        return $this->items->isEmpty();
+    }
+
+    public function getItems()
+    {
+        return $this->items->all();
+    }
+
+    public function clear()
     {
         $this->voucher = null;
         $this->items = collect([]);

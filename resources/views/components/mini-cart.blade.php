@@ -7,7 +7,7 @@
         @if ($cart->count() > 0)
             <table class="w-full mt-4">
                 <tbody>
-                    @foreach ($cart->items->all() as $item)
+                    @foreach ($cart->getItems() as $item)
 
                     <tr>
                         <td>{{ $item->getProduct() }}</td>
