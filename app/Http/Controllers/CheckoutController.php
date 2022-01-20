@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Cart\Cart;
 use App\Checkout\PaymentMethod;
+use App\Events\OrderPlaced;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -109,6 +111,9 @@ class CheckoutController extends Controller
             $paymentMethod->process($order);
 
             $order->push();
+            $this->cart->empty();
+
+            OrderPlaced::dispatch($order);
         });
 
         return redirect(route('checkout.success', ['order' => $order]));

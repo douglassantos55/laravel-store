@@ -40,6 +40,7 @@ class Cart
     {
         $this->session->put('cart.items', $this->items->all());
         $this->session->put('cart.voucher', $this->voucher);
+
         $this->session->save();
     }
 
@@ -83,6 +84,14 @@ class Cart
     public function count(): int
     {
         return $this->items->count();
+    }
+
+    public function empty()
+    {
+        $this->voucher = null;
+        $this->items = collect([]);
+
+        $this->save();
     }
 
     public function getSubtotal(): float

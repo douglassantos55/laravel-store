@@ -57,7 +57,7 @@ class CartController extends Controller
         $code = $request->post('voucher');
         $voucher = Voucher::where('code', $code)->first();
 
-        if (empty($voucher)) {
+        if (empty($voucher) || !$voucher->isValid()) {
             $this->cart->voucher = null;
             $this->cart->save();
             $request->session()->flash('cart_flash', 'Voucher not found');
