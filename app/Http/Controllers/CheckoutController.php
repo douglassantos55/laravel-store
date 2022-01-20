@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Cart\Cart;
 use App\Checkout\PaymentMethod;
-use App\Models\Address;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -38,11 +35,24 @@ class CheckoutController extends Controller
 
     public function index()
     {
+        if ($this->cart->items->isEmpty()) {
+            return redirect(route('cart.details'));
+        }
+
         return view('checkout', ['methods' => $this->paymentMethods->all()]);
+    }
+
+    public function success(Order $order)
+    {
+        return view('checkout/success', ['order' => $order]);
     }
 
     public function process(Request $request)
     {
+        if ($this->cart->items->isEmpty()) {
+            return redirect(route('cart.details'));
+        }
+
         $validated = $request->validate([
             'customer.name' => 'required',
             'customer.email' => 'required|email',
@@ -56,50 +66,51 @@ class CheckoutController extends Controller
             'payment_method' => 'required',
         ]);
 
-        try {
-            DB::transaction(function () use ($request, $validated) {
-                // save customer
-                $customer = User::firstOrCreate(array_merge(
-                    $validated['customer'],
-                    ['password' => '123'],
-                ));
+        $order = new Order();
 
-                $customer->addresses()->firstOrCreate($validated['address']);
+        DB::transaction(function () use ($order, $validated) {
+            // save customer
+            $customer = User::firstOrCreate(array_merge(
+                $validated['customer'],
+                ['password' => '123'],
+            ));
 
-                // create order
-                $order = new Order();
-                $order->customer()->associate($customer);
-                $order->payment_method = $request->post('payment_method', 'paypal');
-                $order->delivery_method = $request->post('delivery_method', 'sedex');
-                $order->total = 135;
-                $order->subtotal = 135;
+            $customer->addresses()->firstOrCreate($validated['address']);
+
+            // create order
+            $order->customer()->associate($customer);
+            $order->payment_method = $validated['payment_method'];
+            $order->delivery_method = 'sedex';
+            $order->discount = $this->cart->getDiscount();
+            $order->total = $this->cart->getTotal();
+            $order->subtotal = $this->cart->getSubtotal();
+
+            if (!is_null($this->cart->voucher)) {
                 $order->voucher()->associate($this->cart->voucher);
-                $order->save();
+            }
 
-                foreach ($this->cart->items->all() as $cartItem) {
-                    $item = new OrderItem();
-                    $item->qty = $cartItem->qty;
-                    $item->price = 135;
-                    $item->subtotal = 135;
-                    $item->order()->associate($order);
-                    $item->book()->associate($cartItem->book);
-                    $item->save();
-                }
+            $order->push();
 
-                // process payment
-                $index = $this->paymentMethods->search(function ($method) use ($order) {
-                    return $method->getName() === $order->payment_method;
-                });
+            foreach ($this->cart->items->all() as $cartItem) {
+                $order->items()->create([
+                    'qty' => $cartItem->qty,
+                    'book_id' => $cartItem->getId(),
+                    'price' => $cartItem->getPrice(),
+                    'subtotal' => $cartItem->getSubtotal(),
+                ]);
+            }
 
-                $paymentMethod = $this->paymentMethods->get($index);
-                $paymentMethod->process($order);
-
-                $order->push();
+            // process payment
+            $index = $this->paymentMethods->search(function ($method) use ($order) {
+                return $method->getName() === $order->payment_method;
             });
 
-            return redirect(route('checkout.sucess'));
-        } catch (Exception $ex) {
-            echo $ex->getMessage();die;
-        }
+            $paymentMethod = $this->paymentMethods->get($index);
+            $paymentMethod->process($order);
+
+            $order->push();
+        });
+
+        return redirect(route('checkout.success', ['order' => $order]));
     }
 }

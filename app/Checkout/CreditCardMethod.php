@@ -3,13 +3,12 @@
 namespace App\Checkout;
 
 use App\Models\Order;
-use Exception;
 
 class CreditCardMethod implements PaymentMethod
 {
     public function process(Order $order)
     {
-        throw new Exception("Failed processing payment");
+        $order->status = Order::STATUS_PAID;
     }
 
     public function getName(): string

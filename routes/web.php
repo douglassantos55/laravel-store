@@ -47,3 +47,4 @@ Route::post('/cart/voucher', [CartController::class, 'voucher'])->name('cart.vou
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');

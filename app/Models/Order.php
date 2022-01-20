@@ -23,6 +23,7 @@ class Order extends Model
     {
         parent::__construct($attributes);
         $this->id = Uuid::uuid4();
+        $this->status = self::STATUS_PENDING;
     }
 
     public function customer()

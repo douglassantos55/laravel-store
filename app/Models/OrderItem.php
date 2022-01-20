@@ -12,6 +12,13 @@ class OrderItem extends Model
 
     protected $keyType = 'uuid';
 
+    protected $fillable = [
+        'qty',
+        'price',
+        'subtotal',
+        'book_id',
+    ];
+
     public $incrementing = false;
 
     public function __construct(array $attributes = [])
