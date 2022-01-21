@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class CheckoutController extends Controller
 {
@@ -41,7 +42,12 @@ class CheckoutController extends Controller
             return redirect(route('cart.details'));
         }
 
-        return view('checkout', ['methods' => $this->paymentMethods->all()]);
+        $customer = auth()->user();
+
+        return view('checkout', [
+            'customer' => $customer,
+            'methods' => $this->paymentMethods->all()
+        ]);
     }
 
     public function success(Order $order)
@@ -58,13 +64,34 @@ class CheckoutController extends Controller
         $validated = $request->validate([
             'customer.name' => 'required',
             'customer.email' => 'required|email',
-            'address.zipcode' => 'required',
-            'address.street' => 'required',
-            'address.number' => 'required',
+            'address_id' => [
+                Rule::requiredIf(function () use ($request) {
+                    $address = $request->post('address');
+                    return !$address['zipcode'] && !$address['number'];
+                }),
+                Rule::exists('addresses', 'id')->where(function ($query) use ($request) {
+                    return $query->where('user_id', auth()->user()->id);
+                }),
+            ],
+            'address.zipcode' => [
+                Rule::requiredIf(!$request->post('address_id')),
+            ],
+            'address.street' => [
+                Rule::requiredIf(!$request->post('address_id')),
+            ],
+            'address.number' => [
+                Rule::requiredIf(!$request->post('address_id')),
+            ],
             'address.complement' => 'present',
-            'address.neighborhood' => 'required',
-            'address.city' => 'required',
-            'address.state' => 'required',
+            'address.neighborhood' => [
+                Rule::requiredIf(!$request->post('address_id')),
+            ],
+            'address.city' => [
+                Rule::requiredIf(!$request->post('address_id')),
+            ],
+            'address.state' => [
+                Rule::requiredIf(!$request->post('address_id')),
+            ],
             'payment_method' => 'required',
         ]);
 
@@ -72,12 +99,14 @@ class CheckoutController extends Controller
 
         DB::transaction(function () use ($order, $validated) {
             // save customer
-            $customer = User::firstOrCreate(array_merge(
+            $customer = User::firstOrCreate($validated['customer'], array_merge(
                 $validated['customer'],
                 ['password' => bcrypt('123')],
             ));
 
-            $customer->addresses()->firstOrCreate($validated['address']);
+            if (empty($validated['address_id'])) {
+                $customer->addresses()->firstOrCreate($validated['address']);
+            }
 
             Auth::login($customer);
 

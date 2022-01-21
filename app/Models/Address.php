@@ -34,4 +34,16 @@ class Address extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function __toString()
+    {
+        return sprintf(
+            "%s %s, %s, %s - %s",
+            $this->zipcode,
+            $this->street,
+            $this->number,
+            $this->city,
+            $this->state
+        );
+    }
 }

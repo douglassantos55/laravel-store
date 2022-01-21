@@ -10,12 +10,12 @@
         <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             <div>
                 <h2 class="font-bold text-xl mb-4">{{ __('checkout.personal_info') }}</h2>
-                @include('checkout/customer')
+                @include('checkout/customer', ['customer' => $customer])
             </div>
 
             <div>
                 <h2 class="font-bold text-xl mb-4">{{ __('checkout.delivery_info') }}</h2>
-                @include('checkout/address')
+                @include('checkout/address', ['customer' => $customer])
             </div>
 
             <div>
