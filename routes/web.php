@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UserController;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
@@ -48,3 +50,9 @@ Route::post('/cart/voucher', [CartController::class, 'voucher'])->name('cart.vou
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+
+Route::post('/auth/login', [LoginController::class, 'login'])->name('auth.login');
+Route::get('/auth/login', [LoginController::class, 'index'])->name('auth.index');
+Route::get('/auth/logout', [LoginController::class, 'logout'])->name('auth.logout');
+
+Route::get('/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard')->middleware('auth');

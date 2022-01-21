@@ -14,7 +14,11 @@
     <header class="p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <a href="{{ route('welcome') }}" class="text-xl font-semibold">Book store</a>
-            <x-mini-cart />
+
+            <div class="flex items-center">
+                <x-user-menu class="mr-5" />
+                <x-mini-cart />
+            </div>
         </div>
     </header>
 

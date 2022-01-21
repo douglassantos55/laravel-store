@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
@@ -73,10 +74,12 @@ class CheckoutController extends Controller
             // save customer
             $customer = User::firstOrCreate(array_merge(
                 $validated['customer'],
-                ['password' => '123'],
+                ['password' => bcrypt('123')],
             ));
 
             $customer->addresses()->firstOrCreate($validated['address']);
+
+            Auth::login($customer);
 
             // create order
             $order->customer()->associate($customer);
