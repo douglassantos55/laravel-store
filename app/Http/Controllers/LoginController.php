@@ -29,7 +29,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => __('auth.invalid_credentials'),
+            'email' => __('auth.failed'),
         ]);
     }
 

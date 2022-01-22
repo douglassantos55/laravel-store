@@ -10,7 +10,7 @@
         <div class="mt-1 text-red-600">{{ $message }}</div>
     @enderror
 
-    <x-button secondary class="js-new-address">{{ __('user.new_address') }}</x-button>
+    <x-button secondary class="js-new-address">{{ __('checkout.new_address') }}</x-button>
 @endif
 
 <div class="{{ !$customer || old('address.number') ? '' : 'hidden' }}">
@@ -78,6 +78,6 @@
     </div>
 
     @if ($customer)
-        <x-button secondary class="js-use-address">{{ __('user.use_address') }}</x-button>
+        <x-button secondary class="js-use-address">{{ __('checkout.use_address') }}</x-button>
     @endif
 </div>
