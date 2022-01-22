@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'customer_id');
     }
+
+    public function wishlist()
+    {
+        return $this->belongsToMany(Book::class, 'wishlist')->withTimestamps();
+    }
 }

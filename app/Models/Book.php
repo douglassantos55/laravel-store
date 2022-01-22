@@ -16,6 +16,8 @@ class Book extends Model
 
     public $incrementing = false;
 
+    protected $guarded = [];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

@@ -4,10 +4,12 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,3 +58,6 @@ Route::get('/auth/login', [LoginController::class, 'index'])->name('auth.index')
 Route::get('/auth/logout', [LoginController::class, 'logout'])->name('auth.logout');
 
 Route::get('/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard')->middleware('auth');
+
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
+Route::post('/wishlist', [WishlistController::class, 'add'])->name('wishlist.add')->middleware('auth');
