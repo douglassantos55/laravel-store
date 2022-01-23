@@ -61,3 +61,4 @@ Route::get('/dashboard', [UserController::class, 'dashboard'])->name('user.dashb
 
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
 Route::post('/wishlist', [WishlistController::class, 'add'])->name('wishlist.add')->middleware('auth');
+Route::delete('/wishlist', [WishlistController::class, 'remove'])->name('wishlist.remove')->middleware('auth');

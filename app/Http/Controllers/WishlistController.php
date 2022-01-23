@@ -19,7 +19,24 @@ class WishlistController extends Controller
          * @var User
          */
         $user = auth()->user();
-        $user->wishlist()->attach($request->post('book_id'));
+
+        if (!$user->wishlist()->find($request->post('book_id'))) {
+            $user->wishlist()->attach($request->post('book_id'));
+        }
+
+        return redirect(route('wishlist.index'));
+    }
+
+    public function remove(Request $request)
+    {
+        /**
+         * @var User
+         */
+        $user = auth()->user();
+
+        if ($user->wishlist()->find($request->post('book_id'))) {
+            $user->wishlist()->detach($request->post('book_id'));
+        }
 
         return redirect(route('wishlist.index'));
     }

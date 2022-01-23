@@ -25,7 +25,12 @@
 
             <input type="hidden" name="book_id" value="{{ $book->id }}" />
             <x-button primary type="submit">{{ __('cart.add') }}</x-button>
-            <x-button secondary>{{ __('wishlist.add') }}</x-button>
+        </form>
+
+        <form method="POST" action="{{ route('wishlist.add') }}">
+            @csrf
+            <input type="hidden" name="book_id" value="{{ $book->id }}" />
+            <x-button secondary type="submit">{{ __('wishlist.add') }}</x-button>
         </form>
     </div>
 </div>
