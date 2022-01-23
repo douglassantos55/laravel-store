@@ -41,7 +41,6 @@
                     @csrf
                     @method('DELETE')
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
-
                     <x-button primary type="submit" class="absolute top-2 right-2 z-10">Remove</x-button>
                 </form>
             </div>
