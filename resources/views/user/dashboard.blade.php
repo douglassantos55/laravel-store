@@ -4,19 +4,26 @@
 
 @section('content')
 <div class="container mx-auto">
+    <p>{{ app('session')->pull('dashboard') }}</p>
+
     <h1 class="mb-4 text-2xl font-bold">{{ __('user.hello', ['name' => $user->name]) }}</h1>
 
     @foreach ($user->orders as $order)
     <div class="p-4 shadow-md">
         <div class="flex justify-between">
             <span class="font-semibold">{{ $order->id }}</span>
-            <span class="text-sm text-gray-600">{{ $order->created_at->format('d/m/Y H:i') }}</span>
+            <span class="text-sm text-gray-600">
+                @if ($order->isPending())
+                    <a class="text-red-600 mr-4" href="{{ route('checkout.cancel', ['order' => $order->id]) }}">Cancel order</a>
+                @endif
+
+                {{ $order->created_at->format('d/m/Y H:i') }}
+            </span>
         </div>
 
         {{ $order->payment_method }}
         {{ $order->delivery_method }}
         {{ $order->status }}
-
 
         <table class="w-full mt-4">
             @foreach ($order->items as $item)

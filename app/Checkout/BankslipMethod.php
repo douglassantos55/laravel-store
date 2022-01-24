@@ -11,6 +11,11 @@ class BankslipMethod implements PaymentMethod
 
     }
 
+    public function cancel(Order $order)
+    {
+
+    }
+
     public function getName(): string
     {
         return 'bankslip';

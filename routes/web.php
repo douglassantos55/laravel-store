@@ -9,7 +9,6 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +51,7 @@ Route::post('/cart/voucher', [CartController::class, 'voucher'])->name('cart.vou
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel/{order}', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
 Route::post('/auth/login', [LoginController::class, 'login'])->name('auth.login');
 Route::get('/auth/login', [LoginController::class, 'index'])->name('auth.index');

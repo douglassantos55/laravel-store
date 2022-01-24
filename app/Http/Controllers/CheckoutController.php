@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Cart\Cart;
 use App\Checkout\PaymentMethod;
+use App\Checkout\PaymentMethodFactory;
+use App\Events\OrderCanceled;
 use App\Events\OrderPlaced;
 use App\Models\Order;
 use App\Models\User;
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class CheckoutController extends Controller
@@ -55,6 +58,28 @@ class CheckoutController extends Controller
         return view('checkout/success', ['order' => $order]);
     }
 
+    public function cancel(Order $order)
+    {
+        if (!Gate::allows('cancel-order', $order)) {
+            abort(403);
+        }
+
+        if ($order->status === Order::STATUS_CANCELED) {
+            session()->flash('dashboard', 'Order has already been canceled');
+            return back();
+        }
+
+        $paymentMethod = PaymentMethodFactory::create($order->payment_method);
+        $paymentMethod->cancel($order);
+
+        $order->status = Order::STATUS_CANCELED;
+        $order->save();
+
+        OrderCanceled::dispatch($order);
+
+        return redirect(route('user.dashboard'));
+    }
+
     public function process(Request $request)
     {
         if ($this->cart->isEmpty()) {
@@ -69,7 +94,7 @@ class CheckoutController extends Controller
                     $address = $request->post('address');
                     return !$address['zipcode'] && !$address['number'];
                 }),
-                Rule::exists('addresses', 'id')->where(function ($query) use ($request) {
+                Rule::exists('addresses', 'id')->where(function ($query) {
                     return $query->where('user_id', auth()->user()->id);
                 }),
             ],

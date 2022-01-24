@@ -20,4 +20,9 @@ class CreditCardMethod implements PaymentMethod
     {
         return 'payment/credit_card';
     }
+
+    public function cancel(Order $order)
+    {
+
+    }
 }
