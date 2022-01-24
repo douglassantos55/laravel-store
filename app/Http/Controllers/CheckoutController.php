@@ -59,7 +59,7 @@ class CheckoutController extends Controller
         return view('checkout/success', ['order' => $order]);
     }
 
-    public function cancel(Order $order)
+    public function cancel(Order $order, PaymentMethodFactory $factory)
     {
         if (!Gate::allows('cancel-order', $order)) {
             abort(403);
@@ -70,7 +70,7 @@ class CheckoutController extends Controller
             return back();
         }
 
-        $paymentMethod = PaymentMethodFactory::create($order->payment_method);
+        $paymentMethod = $factory->create($order->payment_method);
         $paymentMethod->cancel($order);
 
         $order->status = Order::STATUS_CANCELED;

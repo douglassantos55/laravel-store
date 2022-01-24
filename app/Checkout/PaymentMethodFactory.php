@@ -2,19 +2,24 @@
 
 namespace App\Checkout;
 
-use Exception;
+use Illuminate\Support\Collection;
 
-abstract class PaymentMethodFactory
+class PaymentMethodFactory
 {
-    public static function create($methodString): PaymentMethod
+    /**
+     * @var Collection
+     */
+    private $paymentMethods;
+
+    public function __construct(PaymentMethod ...$methods)
     {
-        switch ($methodString) {
-            case "credit_card":
-                return new CreditCardMethod();
-            case "bankslip":
-                return new BankslipMethod();
-            default:
-                throw new Exception("Payment method {$methodString} not found");
-        }
+        $this->paymentMethods = collect($methods);
+    }
+
+    public function create($methodString): PaymentMethod
+    {
+        return $this->paymentMethods->first(function ($method) use ($methodString) {
+            return $method->getName() === $methodString;
+        });
     }
 }
