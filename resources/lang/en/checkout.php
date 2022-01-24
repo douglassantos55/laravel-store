@@ -27,4 +27,5 @@ return [
     'finish' => 'Complete',
     'new_address' => 'Create new address',
     'use_address' => 'Use existing address',
+    'order' => 'Your Order',
 ];

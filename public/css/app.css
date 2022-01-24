@@ -566,6 +566,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-96 {
   width: 24rem;
 }
+.w-auto {
+  width: auto;
+}
 .grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }

@@ -48,6 +48,7 @@ class CheckoutController extends Controller
         $customer = auth()->user();
 
         return view('checkout', [
+            'cart' => $this->cart,
             'customer' => $customer,
             'methods' => $this->paymentMethods->all()
         ]);

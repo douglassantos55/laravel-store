@@ -9,32 +9,32 @@
     <form method="POST" action="{{ route('auth.login') }}">
         @csrf
 
-        <div class="mb-3">
+        <x-form-group>
             <label for="auth-email">{{ __('auth.email') }}</label>
-            <input id="auth-email" type="email" name="email" value="{{ old('email') }}" class="p-2 border w-full">
+            <x-input id="auth-email" type="email" name="email" value="{{ old('email') }}" />
 
             @error('email')
                 <div class="mt-1 text-red-600">{{ $message }}</div>
             @enderror
-        </div>
+        </x-form-group>
 
-        <div class="mb-3">
+        <x-form-group>
             <label for="auth-password">{{ __('auth.password') }}</label>
-            <input id="auth-password" type="password" name="password" value="{{ old('password') }}" class="p-2 border w-full">
+            <x-input id="auth-password" type="password" name="password" value="{{ old('password') }}" />
 
             @error('password')
                 <div class="mt-1 text-red-600">{{ $message }}</div>
             @enderror
-        </div>
+        </x-form-group>
 
-        <div class="mb-3">
+        <x-form-group>
             <label for="auth-remember">{{ __('auth.remember') }}</label>
-            <input id="auth-remember" type="checkbox" name="remember" value="{{ old('remember') }}">
+            <input id="auth-remember" type="checkbox" name="remember" value="{{ old('remember') }}" />
 
             @error('remember')
                 <div class="mt-1 text-red-600">{{ $message }}</div>
             @enderror
-        </div>
+        </x-form-group>
 
         <x-button primary type="submit">{{ __('auth.login') }}</x-button>
     </form>

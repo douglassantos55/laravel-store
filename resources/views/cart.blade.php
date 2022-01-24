@@ -28,7 +28,7 @@
                 @foreach ($cart->getItems() as $item)
                 <tr>
                     <td>
-                        <input class="border py-1 px-2 w-16" type="number" min="1" value="{{ $item->getQty() }}" name="items[{{ $item->getId() }}][qty]" />
+                        <x-input type="number" min="1" value="{{ $item->getQty() }}" name="items[{{ $item->getId() }}][qty]" />
                     </td>
                     <td>{{ $item->getProduct() }}</td>
                     <td class="text-right">{{ $item->getPrice() }}</td>
@@ -65,7 +65,7 @@
     <form action="{{ route('cart.voucher') }}" method="POST">
         @csrf
         <div class="flex items-center mt-4 gap-2">
-            <input class="border p-2" placeholder="{{ __('cart.voucher') }}" name="voucher" />
+            <x-input placeholder="{{ __('cart.voucher') }}" name="voucher" />
             <x-button secondary type="submit">{{ __('cart.apply_voucher') }}</x-button>
         </div>
     </form>

@@ -1,17 +1,17 @@
-<div class="mb-3">
+<x-form-group>
     <label for="checkout-name">{{ __('checkout.name') }}</label>
-    <input id="checkout-name" type="text" class="border p-2 block w-full" name="customer[name]" value="{{ old('customer.name', $customer ? $customer->name : '') }}">
+    <x-input id="checkout-name" type="text" name="customer[name]" value="{{ old('customer.name', $customer ? $customer->name : '') }}" />
 
     @error('customer.name')
         <div class="mt-1 text-red-600">{{ $message }}</div>
     @enderror
-</div>
+</x-form-group>
 
-<div class="mb-3">
+<x-form-group>
     <label for="checkout-email">{{ __('checkout.email') }}</label>
-    <input id="checkout-email" type="email" class="border p-2 block w-full" name="customer[email]" value="{{ old('customer.email', $customer ? $customer->email : '') }}">
+    <x-input id="checkout-email" type="email" name="customer[email]" value="{{ old('customer.email', $customer ? $customer->email : '') }}" />
 
     @error('customer.email')
         <div class="mt-1 text-red-600">{{ $message }}</div>
     @enderror
-</div>
+</x-form-group>
