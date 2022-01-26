@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WishlistController;
 use App\Models\Author;
 use App\Models\Book;
@@ -62,3 +63,5 @@ Route::get('/dashboard', [UserController::class, 'dashboard'])->name('user.dashb
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
 Route::post('/wishlist', [WishlistController::class, 'add'])->name('wishlist.add')->middleware('auth');
 Route::delete('/wishlist', [WishlistController::class, 'remove'])->name('wishlist.remove')->middleware('auth');
+
+Route::post('/webhook/{processor}', [WebhookController::class, 'process']);

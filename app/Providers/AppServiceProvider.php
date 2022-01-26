@@ -7,7 +7,10 @@ use App\Checkout\BankslipMethod;
 use App\Checkout\CreditCardMethod;
 use App\Checkout\PaymentMethod;
 use App\Checkout\PaymentMethodFactory;
+use App\Checkout\Webhook\Iugu\IuguWebhook;
+use App\Checkout\Webhook\WebhookInterface;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,14 +35,11 @@ class AppServiceProvider extends ServiceProvider
             ->needs(PaymentMethod::class)
             ->giveTagged('payment_methods');
 
-        $this->app->bind(CreditCardMethod::class, function () {
-            return new CreditCardMethod('credit_card');
-        });
+        $this->app->when(WebhookController::class)
+            ->needs(WebhookInterface::class)
+            ->giveTagged('webhooks');
 
-        $this->app->bind(BankslipMethod::class, function () {
-            return new BankslipMethod('bank_slip');
-        });
-
+        $this->app->tag(IuguWebhook::class, 'webhooks');
         $this->app->tag(CreditCardMethod::class, 'payment_methods');
         $this->app->tag(BankslipMethod::class, 'payment_methods');
     }
