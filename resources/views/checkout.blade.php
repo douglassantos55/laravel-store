@@ -20,22 +20,22 @@
                 <h2 class="font-bold text-xl mb-4">{{ __('checkout.payment_info') }}</h2>
 
                 @foreach ($methods as $paymentMethod)
-                    <div>
-                        <input id="checkout-method-{{ $paymentMethod->getName() }}" type="radio" name="payment_method" value="{{ $paymentMethod->getName() }}" {{ old('payment_method') == $paymentMethod->getName() ? "checked" : "" }} />
-                        <label for="checkout-method-{{ $paymentMethod->getName() }}">{{ $paymentMethod->getName() }}</label>
-                    </div>
+                <div>
+                    <input id="checkout-method-{{ $paymentMethod->getName() }}" type="radio" name="payment_method" value="{{ $paymentMethod->getName() }}" {{ old('payment_method') == $paymentMethod->getName() ? "checked" : "" }} />
+                    <label for="checkout-method-{{ $paymentMethod->getName() }}">{{ $paymentMethod->getName() }}</label>
+                </div>
 
-                    <div class="">
-                        @include($paymentMethod->getTemplate())
-                    </div>
+                <div class="">
+                    @include($paymentMethod->getTemplate())
+                </div>
                 @endforeach
 
                 @error('payment_method')
-                    <div class="mt-1 text-red-600">{{ $message }}</div>
+                <div class="mt-1 text-red-600">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div>
+            <div class="js-cart-table">
                 <h2 class="font-bold text-xl mb-4">{{ __('checkout.order') }}</h2>
 
                 <table class="w-full mt-4">
@@ -50,9 +50,22 @@
                         </tr>
                         @endforeach
 
+                        @if ($cart->getShippingRate())
+                        <tr>
+                            <td colspan="3" class="text-right font-bold">
+                                {{ __('cart.shipping') }}
+                                <span class="text-blue-600">{{ $cart->getShippingRate()->getName() }}</span>
+                            </td>
+                            <td class="text-right font-bold">{{ $cart->getShippingPrice() }}</td>
+                        </tr>
+                        @endif
+
                         @if ($cart->voucher)
                         <tr>
-                            <td colspan="3" class="text-right font-bold">{{ __('cart.voucher') }} <span class="text-blue-600">{{ $cart->voucher->code }}</span></td>
+                            <td colspan="3" class="text-right font-bold">
+                                {{ __('cart.voucher') }}
+                                <span class="text-blue-600">{{ $cart->voucher->code }}</span>
+                            </td>
                             <td class="text-right font-bold">-{{ $cart->getDiscount() }}</td>
                         </tr>
                         @endif
@@ -63,6 +76,8 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <x-shipping-methods :cart="$cart" />
 
                 <div class="block mt-4">
                     <x-button primary type="submit" class="w-full">{{ __('checkout.finish') }}</x-button>

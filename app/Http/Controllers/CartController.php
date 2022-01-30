@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cart\Cart;
+use App\Cart\Shipping\ShippingMethod;
 use App\Models\Book;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class CartController extends Controller
     /**
      * @var Cart
      */
-    public $cart;
+    private $cart;
 
     public function __construct(Cart $cart)
     {
@@ -47,7 +48,19 @@ class CartController extends Controller
             }
         }
 
+        if ($request->post('zipcode')) {
+            $this->cart->setShippingZipcode($request->post('zipcode'));
+        }
+
+        if ($request->post('shipping_method')) {
+            $this->cart->shippingMethod = $request->post('shipping_method');
+        }
+
         $this->cart->save();
+
+        if ($request->ajax()) {
+            return redirect(route('checkout'));
+        }
 
         return redirect(route('cart.details'));
     }

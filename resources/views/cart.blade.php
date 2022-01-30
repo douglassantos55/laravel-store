@@ -13,7 +13,7 @@
         @csrf
         @method('PUT')
 
-        <table class="w-full mt-10">
+        <table class="js-cart w-full mt-10">
             <thead>
                 <tr>
                     <th class="text-left">{{ __('cart.qty') }}</th>
@@ -42,6 +42,15 @@
                     <td colspan="3" class="text-right font-bold">{{ __('cart.subtotal') }}</td>
                     <td class="text-right font-bold">{{ $cart->getSubtotal() }}</td>
                 </tr>
+                @if ($cart->getShippingRate())
+                <tr>
+                    <td colspan="3" class="text-right font-bold">
+                        {{ __('cart.shipping') }}
+                        <span class="text-blue-600">{{ $cart->getShippingRate()->getName() }}</span>
+                    </td>
+                    <td class="text-right font-bold">{{ $cart->getShippingPrice() }}</td>
+                </tr>
+                @endif
                 @if ($cart->voucher)
                 <tr>
                     <td colspan="3" class="text-right font-bold">{{ __('cart.voucher') }} <span class="text-blue-600">{{ $cart->voucher->code }}</span></td>
@@ -54,6 +63,15 @@
                 </tr>
             </tbody>
         </table>
+
+        <h3 class="text-xl font-semibold">{{ __('cart.shipping') }}</h3>
+
+        <div class="flex mb-5">
+            <x-input name="zipcode" class="w-auto" value="{{ $cart->shippingZipcode }}" />
+            <x-button secondary type="submit">{{ __('cart.calculate') }}</x-button>
+        </div>
+
+        <x-shipping-methods :cart="$cart" />
 
         <x-button secondary type="submit">{{ __('cart.update') }}</x-button>
 

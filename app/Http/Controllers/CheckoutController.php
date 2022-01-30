@@ -139,7 +139,12 @@ class CheckoutController extends Controller
             // create order
             $order->customer()->associate($customer);
             $order->payment_method = $validated['payment_method'];
-            $order->delivery_method = 'sedex';
+            $order->shipping_method = $this->cart->shippingMethod;
+            $order->shipping_company = $this->cart->getShippingRate()->getCompanyName();
+            $order->shipping_service = $this->cart->getShippingRate()->getName();
+            $order->shipping_estimate = $this->cart->getShippingRate()->getEstimate();
+            $order->shipping_company_logo = $this->cart->getShippingRate()->getCompanyLogo();
+            $order->shipping_cost = $this->cart->getShippingRate()->getPrice();
             $order->discount = $this->cart->getDiscount();
             $order->total = $this->cart->getTotal();
             $order->subtotal = $this->cart->getSubtotal();

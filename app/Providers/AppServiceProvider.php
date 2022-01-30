@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Cart\Cart;
+use App\Cart\Shipping\MelhorEnvioShippingMethod;
+use App\Cart\Shipping\ShippingCalculator;
 use App\Checkout\BankslipMethod;
 use App\Checkout\CreditCardMethod;
 use App\Checkout\PaymentMethod;
@@ -24,7 +26,11 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Cart::class, function (Application $app) {
-            return new Cart($app->get('session.store'));
+            return new Cart($app->get('session.store'), $app->make(ShippingCalculator::class));
+        });
+
+        $this->app->bind(ShippingCalculator::class, function (Application $app) {
+            return new ShippingCalculator(...$app->tagged('shipping_methods'));
         });
 
         $this->app->singleton(PaymentMethodFactory::class, function (Application $app) {
@@ -40,8 +46,15 @@ class AppServiceProvider extends ServiceProvider
             ->giveTagged('webhooks');
 
         $this->app->tag(IuguWebhook::class, 'webhooks');
+
         $this->app->tag(CreditCardMethod::class, 'payment_methods');
         $this->app->tag(BankslipMethod::class, 'payment_methods');
+
+        $this->app->when(MelhorEnvioShippingMethod::class)
+            ->needs('$origin')
+            ->giveConfig('shipping.origin');
+
+        $this->app->tag(MelhorEnvioShippingMethod::class, 'shipping_methods');
     }
 
     /**

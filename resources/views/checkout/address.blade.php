@@ -1,7 +1,7 @@
 @if ($customer && !old('address.number'))
     @foreach ($customer->addresses as $address)
         <div class="mb-3 js-address-item">
-            <input id="address-{{ $address->id }}" type="radio" name="address_id" value="{{ $address->id }}" {{ old('address_id') === $address->id ? 'checked' : '' }}/>
+            <input id="address-{{ $address->id }}" type="radio" name="address_id" value="{{ $address->id }}" {{ old('address_id') === $address->id ? 'checked' : '' }} data-zipcode="{{ $address->zipcode }}" />
             <label for="address-{{ $address->id }}">{{ $address }}</label>
         </div>
     @endforeach

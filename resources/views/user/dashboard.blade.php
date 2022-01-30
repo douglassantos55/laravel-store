@@ -14,7 +14,7 @@
             <span class="font-semibold">{{ $order->id }}</span>
             <span class="text-sm text-gray-600">
                 @if ($order->isPending())
-                    <a class="text-red-600 mr-4" href="{{ route('checkout.cancel', ['order' => $order->id]) }}">Cancel order</a>
+                <a class="text-red-600 mr-4" href="{{ route('checkout.cancel', ['order' => $order->id]) }}">Cancel order</a>
                 @endif
 
                 {{ $order->created_at->format('d/m/Y H:i') }}
@@ -22,7 +22,6 @@
         </div>
 
         {{ $order->payment_method }}
-        {{ $order->delivery_method }}
         {{ $order->status }}
 
         <table class="w-full mt-4">
@@ -34,10 +33,21 @@
                 <td class="text-right">{{ $item->subtotal }}</td>
             </tr>
             @endforeach
+
             @if ($order->voucher)
             <tr>
                 <td colspan="3" class="text-right font-semibold text-blue-600">{{ $order->voucher->code }}</td>
                 <td class="text-right">-{{ $order->discount }}</td>
+            </tr>
+            @endif
+
+            @if ($order->shipping_method)
+            <tr>
+                <td colspan="3" class="text-right font-semibold text-blue-600">
+                    <img src="{{ $order->shipping_company_logo }}" class="w-20 inline" />
+                    {{ $order->shipping_service }}
+                </td>
+                <td class="text-right">{{ $order->shipping_cost }}</td>
             </tr>
             @endif
             <tr>
