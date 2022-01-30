@@ -1,4 +1,4 @@
-@if ($customer && !old('address.number'))
+<div class="js-existing-address {{$customer && !old('address.number') && !$zipcode ? '' : 'hidden' }}">
     @foreach ($customer->addresses as $address)
         <div class="mb-3 js-address-item">
             <input id="address-{{ $address->id }}" type="radio" name="address_id" value="{{ $address->id }}" {{ old('address_id') === $address->id ? 'checked' : '' }} data-zipcode="{{ $address->zipcode }}" />
@@ -11,12 +11,12 @@
     @enderror
 
     <x-button secondary class="js-new-address">{{ __('checkout.new_address') }}</x-button>
-@endif
+</div>
 
-<div class="{{ !$customer || old('address.number') ? '' : 'hidden' }}">
+<div class="js-address {{ !$customer || old('address.number') || $zipcode ? '' : 'hidden' }}">
     <x-form-group>
         <label for="checkout-zipcode">{{ __('checkout.zipcode') }}</label>
-        <x-input id="checkout-zipcode" type="text" name="address[zipcode]" value="{{ old('address.zipcode') }}" />
+        <x-input id="checkout-zipcode" type="text" name="address[zipcode]" value="{{ old('address.zipcode', $zipcode) }}" />
 
         @error('address.zipcode')
             <div class="mt-1 text-red-600">{{ $message }}</div>

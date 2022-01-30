@@ -32,11 +32,10 @@ var newAddress = document.querySelector('.js-new-address');
 
 if (newAddress) {
   newAddress.addEventListener('click', function (evt) {
-    evt.target.classList.add('hidden');
-    evt.target.nextElementSibling.classList.remove('hidden');
+    document.querySelector('.js-address').classList.remove('hidden');
+    document.querySelector('.js-existing-address').classList.add('hidden');
     document.querySelectorAll('.js-address-item').forEach(function (item) {
       item.querySelector('input').checked = false;
-      item.classList.add('hidden');
     });
   });
 }
@@ -45,40 +44,90 @@ var useAddress = document.querySelector('.js-use-address');
 
 if (useAddress) {
   useAddress.addEventListener('click', function (evt) {
-    evt.target.parentElement.classList.add('hidden');
-    document.querySelector('.js-new-address').classList.remove('hidden');
-    document.querySelectorAll('.js-address-item').forEach(function (item) {
-      item.classList.remove('hidden');
-    });
+    document.querySelector('.js-address').classList.add('hidden');
+    document.querySelector('.js-existing-address').classList.remove('hidden');
   });
 }
 
-document.querySelectorAll('[name="shipping_method"]').forEach(function (item) {
-  item.addEventListener('change', function (evt) {
-    console.log(evt.target.value);
+var zipcode = document.querySelector('[name="address[zipcode]"]');
+
+if (zipcode) {
+  zipcode.addEventListener('blur', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(evt) {
+      var response, data;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return fetch("https://viacep.com.br/ws/".concat(evt.target.value, "/json/"));
+
+            case 2:
+              response = _context.sent;
+              _context.next = 5;
+              return response.json();
+
+            case 5:
+              data = _context.sent;
+
+              if (data.erro) {
+                updateAddress();
+              } else {
+                updateAddress(data);
+                document.querySelector('[name="address[number]"]').focus();
+              }
+
+              updateCart({
+                zipcode: evt.target.value
+              });
+
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+  zipcode.dispatchEvent(new FocusEvent('blur'));
+}
+
+document.addEventListener('change', function (evt) {
+  if (evt.target.name === 'shipping_method') {
     updateCart({
       shipping_method: evt.target.value
     });
-  });
-});
-document.querySelectorAll('[name="address_id"]').forEach(function (item) {
-  item.addEventListener('change', function (evt) {
+  }
+
+  if (evt.target.name === 'address_id') {
     updateCart({
       zipcode: evt.target.dataset.zipcode
     });
-  });
+  }
 });
 
-function updateCart(_x) {
+function updateAddress(data) {
+  document.querySelector('[name="address[street]"]').value = data && data.logradouro || '';
+  document.querySelector('[name="address[complement]"]').value = data && data.complemento || '';
+  document.querySelector('[name="address[neighborhood]"]').value = data && data.bairro || '';
+  document.querySelector('[name="address[city]"]').value = data && data.localidade || '';
+  document.querySelector('[name="address[state]"]').value = data && data.uf || '';
+}
+
+function updateCart(_x2) {
   return _updateCart.apply(this, arguments);
 }
 
 function _updateCart() {
-  _updateCart = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(data) {
+  _updateCart = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2(data) {
     var formData, key, response, parser, doc;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
             formData = new FormData();
             formData.append('_method', 'put');
@@ -87,7 +136,7 @@ function _updateCart() {
               formData.append(key, data[key]);
             }
 
-            _context.next = 5;
+            _context2.next = 5;
             return fetch('/cart', {
               method: 'POST',
               headers: {
@@ -98,23 +147,23 @@ function _updateCart() {
             });
 
           case 5:
-            response = _context.sent;
+            response = _context2.sent;
             parser = new DOMParser();
-            _context.t0 = parser;
-            _context.next = 10;
+            _context2.t0 = parser;
+            _context2.next = 10;
             return response.text();
 
           case 10:
-            _context.t1 = _context.sent;
-            doc = _context.t0.parseFromString.call(_context.t0, _context.t1, 'text/html');
+            _context2.t1 = _context2.sent;
+            doc = _context2.t0.parseFromString.call(_context2.t0, _context2.t1, 'text/html');
             document.querySelector('.js-cart-table').replaceWith(doc.querySelector('.js-cart-table'));
 
           case 13:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee);
+    }, _callee2);
   }));
   return _updateCart.apply(this, arguments);
 }

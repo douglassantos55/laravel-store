@@ -13,7 +13,7 @@
                 @include('checkout/customer', ['customer' => $customer])
 
                 <h2 class="font-bold text-xl mt-8 mb-4">{{ __('checkout.delivery_info') }}</h2>
-                @include('checkout/address', ['customer' => $customer])
+                @include('checkout/address', ['zipcode' => $cart->shippingZipcode, 'customer' => $customer])
             </div>
 
             <div>
