@@ -10,11 +10,28 @@ class Invoice extends Model
 {
     use HasFactory;
 
+    const STATUS_PAID = 'paid';
+    const STATUS_PENDING = 'pending';
+    const STATUS_CANCELED = 'canceled';
+    const STATUS_REFUNDED = 'refunded';
+
     protected $table = 'invoices';
 
     protected $keyType = 'uuid';
 
     public $incrementing = false;
+
+    protected $casts = [
+        'due_date' => 'date',
+    ];
+
+    protected $fillable = [
+        'status',
+        'total',
+        'payment_method',
+        'due_date',
+        'invoice_url',
+    ];
 
     public function __construct(array $attributes = [])
     {

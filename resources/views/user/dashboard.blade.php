@@ -11,7 +11,7 @@
     @foreach ($user->orders as $order)
     <div class="p-4 shadow-md">
         <div class="flex justify-between">
-            <span class="font-semibold">{{ $order->id }}</span>
+            <a href="{{ route('user.order', ['order' => $order->id]) }}" class="font-semibold">{{ $order->id }}</a>
             <span class="text-sm text-gray-600">
                 @if ($order->isPending())
                 <a class="text-red-600 mr-4" href="{{ route('checkout.cancel', ['order' => $order->id]) }}">Cancel order</a>

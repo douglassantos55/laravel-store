@@ -59,6 +59,7 @@ Route::get('/auth/login', [LoginController::class, 'index'])->name('auth.index')
 Route::get('/auth/logout', [LoginController::class, 'logout'])->name('auth.logout');
 
 Route::get('/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard')->middleware('auth');
+Route::get('/dashboard/order/{order}', [UserController::class, 'order'])->name('user.order')->middleware('auth');
 
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
 Route::post('/wishlist', [WishlistController::class, 'add'])->name('wishlist.add')->middleware('auth');

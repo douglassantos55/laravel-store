@@ -41,6 +41,11 @@ class Order extends Model
         return $this->belongsTo(Voucher::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     public function isPending(): bool
     {
         return $this->status === self::STATUS_PENDING;
