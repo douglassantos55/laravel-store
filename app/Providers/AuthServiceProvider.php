@@ -30,5 +30,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('cancel-order', function (User $user, Order $order) {
             return $user->id === $order->customer->id;
         });
+
+        Gate::define('view-order', function (User $user, Order $order) {
+            return $user->id === $order->customer->id;
+        });
     }
 }
