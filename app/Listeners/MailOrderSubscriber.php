@@ -6,10 +6,11 @@ use App\Events\OrderCanceled;
 use App\Events\OrderPlaced;
 use App\Mail\OrderCanceled as MailOrderCanceled;
 use App\Mail\OrderPlaced as MailOrderPlaced;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Mail;
 
-class MailOrderSubscriber
+class MailOrderSubscriber implements ShouldQueue
 {
     /**
      * Handle the event.
@@ -20,13 +21,13 @@ class MailOrderSubscriber
     public function handleOrderPlaced(OrderPlaced $event)
     {
         $order = $event->getOrder();
-        Mail::queue(new MailOrderPlaced($order));
+        Mail::send(new MailOrderPlaced($order));
     }
 
     public function handleOrderCanceled(OrderCanceled $event)
     {
         $order = $event->getOrder();
-        Mail::queue(new MailOrderCanceled($order));
+        Mail::send(new MailOrderCanceled($order));
     }
 
     public function subscribe(Dispatcher $events)
