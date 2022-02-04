@@ -1,3 +1,5 @@
+import './bootstrap';
+
 const newAddress = document.querySelector('.js-new-address');
 
 if (newAddress) {
@@ -80,4 +82,7 @@ async function updateCart(data) {
     document.querySelector('.js-cart-table').replaceWith(doc.querySelector('.js-cart-table'));
 }
 
-
+window.Echo.channel('notifications')
+    .listen('Connected', function (evt) {
+        console.log({ event: 'connected', evt });
+    });

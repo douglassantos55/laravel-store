@@ -2,37 +2,32 @@
 
 namespace App\Events;
 
-use App\Models\Order;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPlaced implements ShouldBroadcast
+class Connected implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * @var Order
-     */
-    public $order;
+    public $name;
+    public $foo;
+    public $enabled;
+
+    public function __construct()
+    {
+        $this->name = 'test';
+        $this->foo = 'bar';
+        $this->enabled = false;
+    }
 
     /**
-     * Create a new event instance.
+     * Get the channels the event should broadcast on.
      *
-     * @return void
+     * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function __construct(Order $order)
-    {
-        $this->order = $order->withoutRelations();
-    }
-
-    public function getOrder(): Order
-    {
-        return $this->order;
-    }
-
     public function broadcastOn()
     {
         return new Channel('notifications');
