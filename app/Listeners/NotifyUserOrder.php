@@ -4,13 +4,12 @@ namespace App\Listeners;
 
 use App\Events\OrderCanceled;
 use App\Events\OrderPlaced;
-use App\Mail\OrderCanceled as MailOrderCanceled;
-use App\Mail\OrderPlaced as MailOrderPlaced;
+use App\Notifications\NewOrder;
+use App\Notifications\OrderStatusChanged;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Events\Dispatcher;
-use Illuminate\Support\Facades\Mail;
 
-class MailOrderSubscriber implements ShouldQueue
+class NotifyUserOrder implements ShouldQueue
 {
     /**
      * Handle the event.
@@ -21,18 +20,25 @@ class MailOrderSubscriber implements ShouldQueue
     public function handleOrderPlaced(OrderPlaced $event)
     {
         $order = $event->getOrder();
-        Mail::send(new MailOrderPlaced($order));
+        $order->customer->notify(new NewOrder($order));
     }
 
     public function handleOrderCanceled(OrderCanceled $event)
     {
         $order = $event->getOrder();
-        Mail::send(new MailOrderCanceled($order));
+        $order->customer->notify(new OrderStatusChanged($order));
     }
 
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(OrderPlaced::class, [MailOrderSubscriber::class, 'handleOrderPlaced']);
-        $events->listen(OrderCanceled::class, [MailOrderSubscriber::class, 'handleOrderCanceled']);
+        $events->listen(OrderPlaced::class, [
+            NotifyUserOrder::class,
+            'handleOrderPlaced'
+        ]);
+
+        $events->listen(OrderCanceled::class, [
+            NotifyUserOrder::class,
+            'handleOrderCanceled'
+        ]);
     }
 }

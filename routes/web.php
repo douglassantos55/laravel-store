@@ -1,7 +1,5 @@
 <?php
 
-use App\Events\Connected;
-use App\Events\OrderPlaced;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\LoginController;
@@ -11,7 +9,6 @@ use App\Http\Controllers\WishlistController;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
-use App\Models\Order;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Route;
 
@@ -27,8 +24,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    Connected::dispatch();
-
     $books = Book::with(['author', 'category', 'publisher'])->get();
     return view('welcome', ['title' => 'Welcome to the Store', 'books' => $books]);
 })->name('welcome');

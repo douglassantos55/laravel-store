@@ -2,8 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\OrderPlaced;
-use App\Listeners\MailOrderSubscriber;
+use App\Listeners\NotifyUserOrder;
 use App\Listeners\UpdateVoucherUsage;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -20,13 +19,11 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        OrderPlaced::class => [
-            UpdateVoucherUsage::class,
-        ],
     ];
 
     protected $subscribe = [
-        MailOrderSubscriber::class,
+        NotifyUserOrder::class,
+        UpdateVoucherUsage::class,
     ];
 
     /**

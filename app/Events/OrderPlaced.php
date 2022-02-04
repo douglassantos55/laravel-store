@@ -3,20 +3,17 @@
 namespace App\Events;
 
 use App\Models\Order;
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPlaced implements ShouldBroadcast
+class OrderPlaced
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
     /**
      * @var Order
      */
-    public $order;
+    private $order;
 
     /**
      * Create a new event instance.
@@ -31,10 +28,5 @@ class OrderPlaced implements ShouldBroadcast
     public function getOrder(): Order
     {
         return $this->order;
-    }
-
-    public function broadcastOn()
-    {
-        return new Channel('notifications');
     }
 }

@@ -3,13 +3,12 @@
 namespace App\Events;
 
 use App\Models\Order;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class OrderCanceled
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
     /**
      * @var Order
