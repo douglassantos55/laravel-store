@@ -3,6 +3,7 @@
 namespace App\Checkout\Webhook\Iugu;
 
 use App\Models\Invoice;
+use App\Notifications\OrderStatusChanged;
 use Illuminate\Support\Facades\Log;
 
 class IuguInvoiceProcessor
@@ -11,26 +12,22 @@ class IuguInvoiceProcessor
     {
         switch ($action) {
             case "created":
-                $invoice = $this->getInvoice($data['id']);
-
-                if (is_null($invoice)) {
-                    $invoice = Invoice::create(Iugu_Invoice::fetch($data['id']));
-                }
-
-                InvoiceCreatedEvent::dispatch($invoice);
                 break;
             case "status_changed":
                 $invoice = $this->getInvoice($data['id']);
-                InvoiceStatusChangedEvent::dispatch($invoice);
+
+                $invoice->status = $data['status'];
+                $invoice->order->status = $data['status'];
+
+                $invoice->push();
+                $invoice->order->customer->notify(new OrderStatusChanged($invoice->order));
                 break;
         }
-
-        var_dump($data, $action);
     }
 
     private function getInvoice(string $id): Invoice
     {
-        $invoice = Invoice::where('gateway_id', $id)->first();
+        $invoice = Invoice::all()->first();
 
         if (is_null($invoice)) {
             Log::debug("Invoice {$id} was not found in database");

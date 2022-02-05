@@ -2224,7 +2224,11 @@ function _updateCart() {
 }
 
 window.Echo["private"]('App.Models.User.1').notification(function (evt) {
-  console.log(evt);
+  if (evt.type === 'App\\Notifications\\OrderStatusChanged') {
+    if (confirm('Order status change, refresh page?')) {
+      window.location.reload();
+    }
+  }
 });
 
 /***/ }),
