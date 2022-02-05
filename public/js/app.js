@@ -2223,11 +2223,8 @@ function _updateCart() {
   return _updateCart.apply(this, arguments);
 }
 
-window.Echo.channel('notifications').listen('Connected', function (evt) {
-  console.log({
-    event: 'connected',
-    evt: evt
-  });
+window.Echo["private"]('App.Models.User.1').notification(function (evt) {
+  console.log(evt);
 });
 
 /***/ }),

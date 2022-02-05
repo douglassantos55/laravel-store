@@ -82,7 +82,7 @@ async function updateCart(data) {
     document.querySelector('.js-cart-table').replaceWith(doc.querySelector('.js-cart-table'));
 }
 
-window.Echo.channel('notifications')
-    .listen('Connected', function (evt) {
-        console.log({ event: 'connected', evt });
+window.Echo.private('App.Models.User.1')
+    .notification(function (evt) {
+        console.log(evt);
     });

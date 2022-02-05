@@ -6,10 +6,9 @@ use App\Events\OrderCanceled;
 use App\Events\OrderPlaced;
 use App\Notifications\NewOrder;
 use App\Notifications\OrderStatusChanged;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Events\Dispatcher;
 
-class NotifyUserOrder implements ShouldQueue
+class NotifyUserOrder
 {
     /**
      * Handle the event.
