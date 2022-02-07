@@ -4,77 +4,110 @@ import axios from '../axios';
 
 console.log('checkout/checkout.js');
 
-const newAddress = document.querySelector('.js-new-address');
+class Address {
+    constructor(selector, cart) {
+        this._cart = cart;
+        this._useAddressBtn = document.querySelector(`${selector} .js-use-address`);
+        this._newAddressBtn = document.querySelector(`${selector} .js-new-address`);
 
-if (newAddress) {
-    newAddress.addEventListener('click', function (evt) {
-        document.querySelector('.js-address').classList.remove('hidden');
-        document.querySelector('.js-existing-address').classList.add('hidden');
+        this._addressForm = document.querySelector(`${selector} .js-address-form`);
+        this._existingAddress = document.querySelector(`${selector} .js-existing-address`);
 
-        document.querySelectorAll('.js-address-item').forEach(function (item) {
-            item.querySelector('input').checked = false;
+        this._attachListeners();
+    }
+
+    _attachListeners() {
+        this._useAddressBtn.addEventListener('click', this.showAddressList.bind(this));
+        this._newAddressBtn.addEventListener('click', this.showAddressForm.bind(this));
+
+        this._existingAddress.querySelectorAll('[name="address_id"]').forEach((item) => {
+            item.addEventListener('change', (evt) => {
+                if (this._cart) {
+                    this._cart.update({ zipcode: evt.target.dataset.zipcode });
+                }
+            });
         });
-    });
-}
 
-const useAddress = document.querySelector('.js-use-address');
+        this._addressForm.querySelector('[name="address[zipcode]"]')
+            .addEventListener('blur', this.fetchAddress.bind(this));
+    }
 
-if (useAddress) {
-    useAddress.addEventListener('click', function (evt) {
-        document.querySelector('.js-address').classList.add('hidden');
-        document.querySelector('.js-existing-address').classList.remove('hidden');
-    });
-}
+    showAddressList() {
+        this._addressForm.classList.add('hidden');
+        this._existingAddress.classList.remove('hidden');
 
-const zipcode = document.querySelector('[name="address[zipcode]"]');
+        this._addressForm.querySelectorAll('input').forEach(item => item.value = '');
+    }
 
-if (zipcode) {
-    zipcode.addEventListener('blur', async function (evt) {
-        const { data } = await axios.get(`https://viacep.com.br/ws/${evt.target.value}/json/`)
+    showAddressForm() {
+        this._addressForm.classList.remove('hidden');
+        this._existingAddress.classList.add('hidden');
 
-        if (data.erro) {
-            updateAddress();
-        } else {
-            updateAddress(data);
-            document.querySelector('[name="address[number]"]').focus();
+        this._existingAddress.querySelectorAll('[name="address_id"]').forEach(item => {
+            item.checked = false;
+        });
+    }
+
+    async fetchAddress(evt) {
+        const zipcode = evt.target.value.replace(/[^\d]/, '');
+
+        if (zipcode.length !== 8) {
+            return;
         }
 
-        updateCart({ zipcode: evt.target.value })
-    });
+        const { data } = await axios.get(`https://viacep.com.br/ws/${zipcode}/json/`)
 
-    zipcode.dispatchEvent(new FocusEvent('blur'));
-}
+        if (data.erro) {
+            this.updateAddress();
+        } else {
+            this.updateAddress(data);
+            this._addressForm.querySelector('[name="address[number]"]').focus();
+        }
 
-document.addEventListener('change', function (evt) {
-    if (evt.target.name === 'shipping_method') {
-        updateCart({ shipping_method: evt.target.value })
+        if (this._cart) {
+            this._cart.update({ zipcode })
+        }
     }
 
-    if (evt.target.name === 'address_id') {
-        updateCart({ zipcode: evt.target.dataset.zipcode });
+    updateAddress(data) {
+        this._addressForm.querySelector('[name="address[street]"]').value = data && data.logradouro || '';
+        this._addressForm.querySelector('[name="address[complement]"]').value = data && data.complemento || '';
+        this._addressForm.querySelector('[name="address[neighborhood]"]').value = data && data.bairro || '';
+        this._addressForm.querySelector('[name="address[city]"]').value = data && data.localidade || '';
+        this._addressForm.querySelector('[name="address[state]"]').value = data && data.uf || '';
     }
-});
-
-function updateAddress(data) {
-    document.querySelector('[name="address[street]"]').value = data && data.logradouro || '';
-    document.querySelector('[name="address[complement]"]').value = data && data.complemento || '';
-    document.querySelector('[name="address[neighborhood]"]').value = data && data.bairro || '';
-    document.querySelector('[name="address[city]"]').value = data && data.localidade || '';
-    document.querySelector('[name="address[state]"]').value = data && data.uf || '';
 }
 
-async function updateCart(data) {
-    const formData = new FormData();
-    formData.append('_method', 'put');
+class Cart {
+    constructor(selector) {
+        this._selector = selector;
+        this._el = document.querySelector(this._selector);
 
-    for (const key in data) {
-        formData.append(key, data[key]);
+        document.addEventListener('change', (evt) => {
+            if (evt.target.name === 'shipping_method') {
+                this.update({ shipping_method: evt.target.value });
+            }
+        });
     }
 
-    const { data: html } = await axios.post('/cart', formData)
+    async update(data) {
+        const formData = new FormData();
+        formData.append('_method', 'put');
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    document.querySelector('.js-cart-table').replaceWith(doc.querySelector('.js-cart-table'));
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+
+        const { data: html } = await axios.post('/cart', formData);
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // replaceChildren maintains reference to this._el
+        const newElement = doc.querySelector(this._selector);
+        this._el.replaceChildren(...newElement.children);
+    }
 }
 
+const cart = new Cart('.js-cart-table');
+const address = new Address('.js-addresses', cart);
