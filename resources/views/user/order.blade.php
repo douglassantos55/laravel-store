@@ -70,3 +70,7 @@
     @endforeach
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/order/details.js') }}"></script>
+@endpush

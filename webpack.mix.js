@@ -11,7 +11,13 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
+mix.js('resources/js/app.js', './js')
+    .js('resources/js/order/*.js', './js/order')
+    .js('resources/js/checkout/cart.js', './js/checkout')
+    .js('resources/js/checkout/checkout.js', './js/checkout')
+    .postCss('resources/css/app.css', './css', [
         require('tailwindcss'),
-    ]);
+    ])
+    .extract([], './js/vendors.js')
+    .options({ runtimeChunkPath: './js' })
+    .version();

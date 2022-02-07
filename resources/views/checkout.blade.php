@@ -88,3 +88,7 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ mix('js/checkout/checkout.js') }}"></script>
+@endpush

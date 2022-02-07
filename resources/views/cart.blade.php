@@ -92,3 +92,7 @@
     @endif
 </div>
 @endsection
+
+@stack('scripts')
+<script src="{{ mix('js/checkout/cart.js') }}"></script>
+@endstack
