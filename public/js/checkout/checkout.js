@@ -66,7 +66,6 @@ var Address = /*#__PURE__*/function () {
   function Address(selector, cart) {
     _classCallCheck(this, Address);
 
-    this._cart = cart;
     this._useAddressBtn = document.querySelector("".concat(selector, " .js-use-address"));
     this._newAddressBtn = document.querySelector("".concat(selector, " .js-new-address"));
     this._addressForm = document.querySelector("".concat(selector, " .js-address-form"));
@@ -78,19 +77,17 @@ var Address = /*#__PURE__*/function () {
   _createClass(Address, [{
     key: "_attachListeners",
     value: function _attachListeners() {
-      var _this = this;
-
       this._useAddressBtn.addEventListener('click', this.showAddressList.bind(this));
 
       this._newAddressBtn.addEventListener('click', this.showAddressForm.bind(this));
 
       this._existingAddress.querySelectorAll('[name="address_id"]').forEach(function (item) {
         item.addEventListener('change', function (evt) {
-          if (_this._cart) {
-            _this._cart.update({
+          document.dispatchEvent(new CustomEvent('address.changed', {
+            detail: {
               zipcode: evt.target.dataset.zipcode
-            });
-          }
+            }
+          }));
         });
       });
 
@@ -153,11 +150,11 @@ var Address = /*#__PURE__*/function () {
                   this._addressForm.querySelector('[name="address[number]"]').focus();
                 }
 
-                if (this._cart) {
-                  this._cart.update({
+                document.dispatchEvent(new CustomEvent('address.changed', {
+                  detail: {
                     zipcode: zipcode
-                  });
-                }
+                  }
+                }));
 
               case 9:
               case "end":
@@ -189,15 +186,20 @@ var Address = /*#__PURE__*/function () {
 
 var Cart = /*#__PURE__*/function () {
   function Cart(selector) {
-    var _this2 = this;
+    var _this = this;
 
     _classCallCheck(this, Cart);
 
     this._selector = selector;
     this._el = document.querySelector(this._selector);
+    document.addEventListener('address.changed', function (evt) {
+      _this.update({
+        zipcode: evt.detail.zipcode
+      });
+    });
     document.addEventListener('change', function (evt) {
       if (evt.target.name === 'shipping_method') {
-        _this2.update({
+        _this.update({
           shipping_method: evt.target.value
         });
       }
@@ -256,7 +258,7 @@ var Cart = /*#__PURE__*/function () {
 }();
 
 var cart = new Cart('.js-cart-table');
-var address = new Address('.js-addresses', cart);
+var address = new Address('.js-addresses');
 
 /***/ })
 

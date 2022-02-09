@@ -6,7 +6,6 @@ console.log('checkout/checkout.js');
 
 class Address {
     constructor(selector, cart) {
-        this._cart = cart;
         this._useAddressBtn = document.querySelector(`${selector} .js-use-address`);
         this._newAddressBtn = document.querySelector(`${selector} .js-new-address`);
 
@@ -22,9 +21,11 @@ class Address {
 
         this._existingAddress.querySelectorAll('[name="address_id"]').forEach((item) => {
             item.addEventListener('change', (evt) => {
-                if (this._cart) {
-                    this._cart.update({ zipcode: evt.target.dataset.zipcode });
-                }
+                document.dispatchEvent(new CustomEvent('address.changed', {
+                    detail: {
+                        zipcode: evt.target.dataset.zipcode
+                    }
+                }));
             });
         });
 
@@ -64,9 +65,7 @@ class Address {
             this._addressForm.querySelector('[name="address[number]"]').focus();
         }
 
-        if (this._cart) {
-            this._cart.update({ zipcode })
-        }
+        document.dispatchEvent(new CustomEvent('address.changed', { detail: { zipcode } }));
     }
 
     updateAddress(data) {
@@ -82,6 +81,10 @@ class Cart {
     constructor(selector) {
         this._selector = selector;
         this._el = document.querySelector(this._selector);
+
+        document.addEventListener('address.changed', (evt) => {
+            this.update({ zipcode: evt.detail.zipcode });
+        });
 
         document.addEventListener('change', (evt) => {
             if (evt.target.name === 'shipping_method') {
@@ -110,4 +113,4 @@ class Cart {
 }
 
 const cart = new Cart('.js-cart-table');
-const address = new Address('.js-addresses', cart);
+const address = new Address('.js-addresses');
