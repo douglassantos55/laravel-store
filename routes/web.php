@@ -49,10 +49,10 @@ Route::get('/cart', [CartController::class, 'details'])->name('cart.details');
 Route::put('/cart', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/voucher', [CartController::class, 'voucher'])->name('cart.voucher');
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel/{order}', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout')->middleware('auth');
 
 Route::post('/auth/login', [LoginController::class, 'login'])->name('auth.login');
 Route::get('/auth/login', [LoginController::class, 'index'])->name('auth.index');
