@@ -112,7 +112,7 @@ class CheckoutController extends Controller
             'credit_card.number' => 'required_if:payment_method,credit_card',
             'credit_card.name' => 'required_if:payment_method,credit_card',
             'credit_card.cvv' => 'required_if:payment_method,credit_card',
-            'credit_card.expiration_date' => 'sometimes|exclude_unless:payment_method,credit_card|required_if:payment_method,credit_card|date_format:m/Y|after:today',
+            'credit_card.expiration_date' => 'sometimes|exclude_unless:payment_method,credit_card|required|date_format:m/Y|after:today',
         ]);
 
         $order = new Order();
