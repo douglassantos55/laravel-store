@@ -92,32 +92,21 @@ class CheckoutController extends Controller
             'customer.email' => 'required|email',
             'address_id' => [
                 Rule::requiredIf(function () use ($request) {
-                    $address = $request->post('address');
-                    return !$address['zipcode'] && !$address['number'];
+                    return count(array_filter($request->post('address'), function ($field) {
+                        return empty($field);
+                    }));
                 }),
                 Rule::exists('addresses', 'id')->where(function ($query) {
                     return $query->where('user_id', auth()->user()->id);
                 }),
             ],
-            'address.zipcode' => [
-                Rule::requiredIf(!$request->post('address_id')),
-            ],
-            'address.street' => [
-                Rule::requiredIf(!$request->post('address_id')),
-            ],
-            'address.number' => [
-                Rule::requiredIf(!$request->post('address_id')),
-            ],
+            'address.zipcode' => 'required_without:address_id',
+            'address.street' => 'required_without:address_id',
+            'address.number' => 'required_without:address_id',
             'address.complement' => 'present',
-            'address.neighborhood' => [
-                Rule::requiredIf(!$request->post('address_id')),
-            ],
-            'address.city' => [
-                Rule::requiredIf(!$request->post('address_id')),
-            ],
-            'address.state' => [
-                Rule::requiredIf(!$request->post('address_id')),
-            ],
+            'address.neighborhood' => 'required_without:address_id',
+            'address.city' => 'required_without:address_id',
+            'address.state' => 'required_without:address_id',
             'shipping_method' => 'required',
             'payment_method' => 'required',
             'credit_card.number' => 'required_if:payment_method,credit_card',
