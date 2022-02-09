@@ -54,6 +54,7 @@
     <div class="p-4 shadow-md">
         <div class="flex justify-between">
             {{ $invoice->id }}
+CC: {{ $invoice->credit_card_number }}
 
             <div>
                 <span class="text-sm text-gray-600">

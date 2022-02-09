@@ -7,9 +7,11 @@ use App\Models\Order;
 
 class CreditCardMethod implements PaymentMethod
 {
-    public function process(Order $order)
+    public function process(Order $order, array $data)
     {
         // do stuff in payment gateway...
+
+        // $gateway->createPaymentMethod($order->customer->id, $data['credit_card']);
 
         $order->invoices()->create([
             'status' => Invoice::STATUS_PAID,
@@ -17,6 +19,7 @@ class CreditCardMethod implements PaymentMethod
             'payment_method' => $this->getName(),
             'due_date' => now(),
             'invoice_url' => 'http://gateway.com/invoices/id',
+            'credit_card_number' => $data['credit_card']['number'],
         ]);
 
         $order->status = Order::STATUS_PAID;

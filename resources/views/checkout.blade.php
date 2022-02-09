@@ -31,7 +31,7 @@
                 @endforeach
 
                 @error('payment_method')
-                <div class="mt-1 text-red-600">{{ $message }}</div>
+                    <div class="mt-1 text-red-600">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -78,6 +78,10 @@
                 </table>
 
                 <x-shipping-methods :cart="$cart" />
+
+                @error('shipping_method')
+                    <div class="mt-1 text-red-600">{{ $message }}</div>
+                @enderror
 
                 <div class="block mt-4">
                     <x-button primary type="submit" class="w-full">{{ __('checkout.finish') }}</x-button>

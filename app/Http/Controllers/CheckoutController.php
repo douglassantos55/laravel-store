@@ -118,7 +118,12 @@ class CheckoutController extends Controller
             'address.state' => [
                 Rule::requiredIf(!$request->post('address_id')),
             ],
+            'shipping_method' => 'required',
             'payment_method' => 'required',
+            'credit_card.number' => 'required_if:payment_method,credit_card',
+            'credit_card.name' => 'required_if:payment_method,credit_card',
+            'credit_card.cvv' => 'required_if:payment_method,credit_card',
+            'credit_card.expiration_date' => 'sometimes|exclude_unless:payment_method,credit_card|required_if:payment_method,credit_card|date_format:m/Y|after:today',
         ]);
 
         $order = new Order();
@@ -170,7 +175,7 @@ class CheckoutController extends Controller
             });
 
             $paymentMethod = $this->paymentMethods->get($index);
-            $paymentMethod->process($order);
+            $paymentMethod->process($order, $validated);
 
             $order->push();
             $this->cart->clear();

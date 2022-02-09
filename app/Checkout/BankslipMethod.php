@@ -7,7 +7,7 @@ use App\Models\Order;
 
 class BankslipMethod implements PaymentMethod
 {
-    public function process(Order $order)
+    public function process(Order $order, array $data)
     {
         // do stuff in payment gateway...
 
